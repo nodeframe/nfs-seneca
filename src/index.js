@@ -52,6 +52,12 @@ export default function(seneca_options,config){
     })
   };
 
+  if(config && config.uses){
+    config.uses.reduce((prev,curr)=>{
+      return prev.use(curr);
+    },si);
+  }
+
   if(config && config.listenings){
     config.listenings.reduce((prev,curr)=>{
       return prev.listen(curr);
