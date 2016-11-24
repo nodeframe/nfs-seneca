@@ -1,7 +1,7 @@
 {
   "name": "nfs-seneca",
-  "version": "1.0.1",
-  "description": "",
+  "version": "1.2.1",
+  "description": "seneca wrapper",
   "main": "libs/index.js",
   "scripts": {
     "build": "rm -rf libs/** && node_modules/.bin/babel src/ -d libs -s",
