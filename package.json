@@ -30,8 +30,9 @@
     "sinon": "^1.17.5"
   },
   "dependencies": {
-    "babel-core": "^6.18.2",
-    "bluebird": "^3.4.6",
-    "seneca": "^3.2.2"
+    "babel-core": "6.18.2",
+    "bluebird": "3.4.6",
+    "lodash": "4.17.4",
+    "seneca": "3.2.2"
   }
 }

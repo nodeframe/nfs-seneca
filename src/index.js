@@ -1,5 +1,7 @@
 import seneca from 'seneca';
 import Promise from 'bluebird';
+import register from './register';
+import * as Mesh from './plugin/mesh';
 
 const serializeError = (e)=>{
   return {name:e.name,stack:e.stack,message:e.message,errors: e.errors};
@@ -13,8 +15,8 @@ const deserializeError = (oe)=>{
   return e;
 }
 
-export default function(seneca_options,config){
-  const si = seneca(seneca_options);
+export default function(senecaOptions, transportConfig = {}){
+  const si = seneca(senecaOptions);
 
   const act = (args) =>{
     return new Promise((resolve,reject)=>{
@@ -24,7 +26,6 @@ export default function(seneca_options,config){
         else resolve(resp.result);
       });
     });
-
   }
 
   const add = (options,callback)=>{
@@ -50,24 +51,14 @@ export default function(seneca_options,config){
         return;
       }
     })
-  };
-
-  if(config && config.uses){
-    config.uses.reduce((prev,curr)=>{
-      return prev.use(curr);
-    },si);
   }
 
-  if(config && config.listenings){
-    config.listenings.reduce((prev,curr)=>{
-      return prev.listen(curr);
-    },si);
-  }
-
-  if(config && config.clients){
-    config.clients.reduce((prev,curr)=>{
-      return prev.client(curr);
-    },si);
+  switch(transportConfig.type) {
+    case 'mesh':
+      Mesh.init(si, transportConfig)
+    default:
+      register(si)
+      break;
   }
 
   return {act,add,si};
