@@ -2,7 +2,6 @@ import seneca from 'seneca';
 import _ from 'lodash'
 
 export function init(seneca, transportConfig = {}, ...args) {
-	const transportConfig = args[1]
 	let pins
   if (Array.isArray(transportConfig.listenings)) {
     const pinSet = transportConfig.listenings.map(m => m.pins)

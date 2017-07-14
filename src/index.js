@@ -57,6 +57,7 @@ export default function(senecaOptions, transportConfig = {}){
     case 'mesh':
       console.log("nfs-seneca mesh mode!")
       Mesh.init(si, transportConfig)
+      break;
     default:
       console.log("nfs-seneca normal mode")
       register(si)

@@ -4,8 +4,10 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-exports.default = function (seneca_options, config) {
-  var si = (0, _seneca2.default)(seneca_options);
+exports.default = function (senecaOptions) {
+  var transportConfig = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+  var si = (0, _seneca2.default)(senecaOptions);
 
   var act = function act(args) {
     return new _bluebird2.default(function (resolve, reject) {
@@ -42,22 +44,15 @@ exports.default = function (seneca_options, config) {
     });
   };
 
-  if (config && config.uses) {
-    config.uses.reduce(function (prev, curr) {
-      return prev.use(curr);
-    }, si);
-  }
-
-  if (config && config.listenings) {
-    config.listenings.reduce(function (prev, curr) {
-      return prev.listen(curr);
-    }, si);
-  }
-
-  if (config && config.clients) {
-    config.clients.reduce(function (prev, curr) {
-      return prev.client(curr);
-    }, si);
+  switch (transportConfig.type) {
+    case 'mesh':
+      console.log("nfs-seneca mesh mode!");
+      Mesh.init(si, transportConfig);
+      break;
+    default:
+      console.log("nfs-seneca normal mode");
+      (0, _register2.default)(si);
+      break;
   }
 
   return { act: act, add: add, si: si };
@@ -70,6 +65,16 @@ var _seneca2 = _interopRequireDefault(_seneca);
 var _bluebird = require('bluebird');
 
 var _bluebird2 = _interopRequireDefault(_bluebird);
+
+var _register = require('./register');
+
+var _register2 = _interopRequireDefault(_register);
+
+var _mesh = require('./plugin/mesh');
+
+var Mesh = _interopRequireWildcard(_mesh);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
