@@ -1,6 +1,6 @@
 import seneca from 'seneca';
 import Promise from 'bluebird';
-import register from './register';
+import {register} from './register';
 import * as Mesh from './plugin/mesh';
 
 const serializeError = (e)=>{

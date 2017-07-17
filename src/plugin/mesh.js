@@ -1,12 +1,9 @@
-import seneca from 'seneca';
 import _ from 'lodash'
+import * as Module from '../module'
 
 export function init(seneca, transportConfig = {}, ...args) {
-	let pins
-  if (Array.isArray(transportConfig.listenings)) {
-    const pinSet = transportConfig.listenings.map(m => m.pins)
-    pins = _.flatten(pinSet)
-  }
+	let pins = Module.extractListenings(transportConfig)
+
   if(!_.isEmpty(transportConfig.consul)) {
   	seneca.use('consul-registry', {
     	host: transportConfig.consul.host
