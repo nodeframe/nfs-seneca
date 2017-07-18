@@ -13,7 +13,8 @@ exports.default = function (senecaOptions) {
     return new _bluebird2.default(function (resolve, reject) {
       si.act(args, function (err, resp) {
         if (err) {
-          reject(err);return;
+          reject(err);
+          return;
         } else if (!resp.ok) reject(deserializeError(resp.error));else resolve(resp.result);
       });
     });
@@ -51,9 +52,11 @@ exports.default = function (senecaOptions) {
       break;
     default:
       console.log("nfs-seneca normal mode");
-      (0, _register2.default)(si);
+      (0, _register.register)(si, transportConfig);
       break;
   }
+
+  Module.registerHealthCheck(si, transportConfig);
 
   return { act: act, add: add, si: si };
 };
@@ -68,11 +71,13 @@ var _bluebird2 = _interopRequireDefault(_bluebird);
 
 var _register = require('./register');
 
-var _register2 = _interopRequireDefault(_register);
-
 var _mesh = require('./plugin/mesh');
 
 var Mesh = _interopRequireWildcard(_mesh);
+
+var _module = require('./module');
+
+var Module = _interopRequireWildcard(_module);
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 

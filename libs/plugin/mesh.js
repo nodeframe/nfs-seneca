@@ -5,26 +5,23 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.init = init;
 
-var _seneca = require('seneca');
-
-var _seneca2 = _interopRequireDefault(_seneca);
-
 var _lodash = require('lodash');
 
 var _lodash2 = _interopRequireDefault(_lodash);
+
+var _module = require('../module');
+
+var Module = _interopRequireWildcard(_module);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function init(seneca) {
   var transportConfig = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
-  var pins = void 0;
-  if (Array.isArray(transportConfig.listenings)) {
-    var pinSet = transportConfig.listenings.map(function (m) {
-      return m.pins;
-    });
-    pins = _lodash2.default.flatten(pinSet);
-  }
+  var pins = Module.extractListenings(transportConfig);
+
   if (!_lodash2.default.isEmpty(transportConfig.consul)) {
     seneca.use('consul-registry', {
       host: transportConfig.consul.host
