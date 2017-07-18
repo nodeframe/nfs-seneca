@@ -277,12 +277,14 @@ const seneca = nfsSeneca({}, {
 to help you debug the service, we develop a ping function that can pass the same config and ping to the client service
 
 ```javascript
-var ping = require('nfs-seneca/tool').getPing(senecaOption, transportConfig)
+var ping = require('nfs-seneca/libs/tool').getPing(senecaOption, transportConfig)
 ```
 
 then, this function can be used to call to health check on the specify service
 
 ```javascript
-ping('a')
+ping('a').then(function(resp) {
+  console.log("resp=", resp)
+})
 ```
 will call to service `a`
