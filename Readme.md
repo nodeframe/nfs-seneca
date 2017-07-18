@@ -205,3 +205,84 @@ const config = {
 ```
 
 notice the `mesh.host` is the mandatory field that should specify about this service host name so that other service can connect to this service. The bases array is the base center service according to mesh architecture.
+
+## HealthCheck
+
+It is important for seneca service to check if the other service to call is available or not. On the contrary, each service should provide a simple health checking for other servie to check if the communication can be made. This will help savign quite some time during debugging process.
+
+`nfs-seneca` try to add a mean to handle this problem. When you pass the config into `nfs-seneca`, it will automatically read which listening pins this current service provides. It then create another special `add` for each pins.
+
+For example, passing this config to `nfs-seneca`
+
+```javascript
+const seneca = nfsSeneca({}, {
+  listenings: [
+    {
+      type: 'http',
+      pins: [
+        { role: 'a', cmd: '*' },
+        { role: 'b', cmd: '*' },
+        { role: 'c', cmd: 'cee' }
+      ]
+    }
+  ],
+  clients: [
+    {
+      type: 'http',
+      pins: [{role: 'd', cmd: '*'}]
+    }
+  ]
+})
+```
+
+passing this, the health check function will be registered to these pins
+
+```javascript
+{ role: 'a', cmd: '_healthCheck' }
+{ role: 'b', cmd: '_healthCheck' }
+```
+
+for other service you can ping to check if this service is online by running this
+
+```javascript
+seneca.act({role: 'a', cmd: '_healthCheck'}, function(err, response) {
+  console.log(response.result)
+  //will return {timestamp: <<the current time>>, service: 'a'}
+})
+
+```
+
+_**Note**_ that `role: c` will not register any healthCheck because it could not be sure that all the pins will come into this service, hence there could be clashes on `_healthCheck` method. Moreover, note that the `role: d` will not be registered also sine it is a service that _this_ current service will consume (not the provider).
+
+To add manual health check to this service, you can do it by sending `healthCheck` config like so
+
+```javascript
+const seneca = nfsSeneca({}, {
+  healthCheck: ['a', 'b']
+})
+```
+
+doing this will add `cmd: _healthCheck` to role `a` and `b`
+
+Lastly, if you are not interested in the health check, you can disable it by passing
+
+```javascript
+const seneca = nfsSeneca({}, {
+  disableHealthCheck: true
+})
+```
+
+### Ping function
+
+to help you debug the service, we develop a ping function that can pass the same config and ping to the client service
+
+```javascript
+var ping = require('nfs-seneca/tool').getPing(senecaOption, transportConfig)
+```
+
+then, this function can be used to call to health check on the specify service
+
+```javascript
+ping('a')
+```
+will call to service `a`
