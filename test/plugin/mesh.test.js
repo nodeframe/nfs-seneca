@@ -4,6 +4,7 @@ chai.use(chaiAsPromised).should()
 import _ from 'lodash'
 
 import * as Mesh from '../../src/plugin/mesh'
+import {SenecaMockup} from "../helper.test";
 
 describe('mesh plugin', function () {
   let baseConfig = {
@@ -41,7 +42,7 @@ describe('mesh plugin', function () {
   }
   context('#init', () => {
     it('should be able to register config into mesh config', () => {
-      let moq = new SenecaMuckup()
+      let moq = new SenecaMockup()
       Mesh.init(moq, baseConfig.transports)
       _.filter(moq.register, ['name', 'mesh'])[0]
         .should.have.property('object')
@@ -63,22 +64,3 @@ describe('mesh plugin', function () {
 
 })
 
-class SenecaMuckup {
-  constructor(r = []) {
-    this.register = r
-  }
-
-  use(name, object) {
-    this.register.push({
-      name, object
-    })
-    return this
-  }
-
-  ready(f) {
-    this.register.push({
-      name: 'ready', object: f
-    })
-    return this
-  }
-}
