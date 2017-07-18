@@ -35,6 +35,6 @@ function addHealthCheck(seneca, serviceName) {
   const serviceObject = {role: serviceName, cmd: '_healthCheck'}
   console.log('assign health check', serviceObject)
   seneca.add(serviceObject, function(args, done) {
-    done(null, {ok: true, timestamp: new Date(), service: serviceName})
+    done(null, {ok: true, result: {timestamp: new Date(), service: serviceName}})
   })
 }

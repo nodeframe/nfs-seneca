@@ -182,7 +182,7 @@ describe("Module", function () {
     si2.act({role: 'role_1', cmd: '_healthCheck'}, function(err, resp) {
       console.log('done', resp)
       if (err) done(err);
-      resp.should.have.property('service').equal('role_1')
+      resp.should.have.property('result').to.have.property('service').equal('role_1')
       done()
     })
 
