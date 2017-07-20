@@ -4,13 +4,21 @@ Create and maintain by _[Nodeframe Solution](www.nf-solution.com)_
 
 Contact us at support@nf-solution.com
 
+*NOTE:* This lib had been migrated from [nfs-seneca](https://www.npmjs.com/package/nfs-seneca) which is officially depreciated. The development and maintenance will continue solely on this repo.
+
 ## Installation
 
 ```sh
-npm install nfs-seneca --save
+npm install @nodeframe/seneca --save
 ```
 
 ## Usage
+
+import
+
+```javascript
+import nfsSeneca from '@nodeframe/seneca';
+```
 
 declare the seneca using this syntax
 
@@ -34,7 +42,7 @@ The `add` and `act` is simply the wrapped version of `si.add` and `si.act`
 You can declare a service with function,promise and async function
 
 ```javascript
-import nfsSeneca from 'nfs-seneca';
+import nfsSeneca from '@nodeframe/seneca';
 const {add,act,si} = nfsSeneca(config.seneca.options, config.seneca.transport);
 
 add({...}, (args,done) => {
@@ -210,9 +218,9 @@ notice the `mesh.host` is the mandatory field that should specify about this ser
 
 It is important for seneca service to check if the other service to call is available or not. On the contrary, each service should provide a simple health checking for other servie to check if the communication can be made. This will help savign quite some time during debugging process.
 
-`nfs-seneca` try to add a mean to handle this problem. When you pass the config into `nfs-seneca`, it will automatically read which listening pins this current service provides. It then create another special `add` for each pins.
+`@nodeframe/seneca` try to add a mean to handle this problem. When you pass the config into `@nodeframe/seneca`, it will automatically read which listening pins this current service provides. It then create another special `add` for each pins.
 
-For example, passing this config to `nfs-seneca`
+For example, passing this config to `@nodeframe/seneca`
 
 ```javascript
 const seneca = nfsSeneca({}, {
@@ -277,7 +285,7 @@ const seneca = nfsSeneca({}, {
 to help you debug the service, we develop a ping function that can pass the same config and ping to the client service
 
 ```javascript
-var ping = require('nfs-seneca/libs/tool').getPing(senecaOption, transportConfig)
+var ping = require('@nodeframe/seneca/libs/tool').getPing(senecaOption, transportConfig)
 ```
 
 then, this function can be used to call to health check on the specify service
