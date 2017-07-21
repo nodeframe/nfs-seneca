@@ -6,14 +6,22 @@ export function register(seneca, transportConfig = {}) {
   }
 
   if (transportConfig.listenings) {
-    transportConfig.listenings.reduce((prev, curr)=> {
-      return prev.listen(curr);
-    }, seneca);
+    if (Array.isArray(transportConfig.listenings)) {
+      transportConfig.listenings.reduce((prev, curr)=> {
+        return prev.listen(curr);
+      }, seneca);
+    } else {
+      seneca.listen(transportConfig.listenings)
+    }
   }
 
   if (transportConfig.clients) {
-    transportConfig.clients.reduce((prev, curr)=> {
-      return prev.client(curr);
-    }, seneca);
+    if (Array.isArray(transportConfig.clients)) {
+      transportConfig.clients.reduce((prev, curr)=> {
+        return prev.client(curr);
+      }, seneca);
+    } else {
+      seneca.client(transportConfig.clients)
+    }
   }
 }
