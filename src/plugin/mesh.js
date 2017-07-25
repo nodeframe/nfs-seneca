@@ -17,6 +17,7 @@ export function init(seneca, transportConfig = {}, ...args) {
   console.log("on pin ==>", pins)
   let meshOption = {
   	host: transportConfig.mesh.host,
+    port: transportConfig.mesh.port ||39999,
     pins: pins,
     bases:transportConfig.mesh.bases,
     discover:{
