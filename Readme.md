@@ -1,4 +1,4 @@
-Seneca wrapper for ES6 and promise application
+Seneca wrapper for Modern ES and promise application
 
 Create and maintain by _[Nodeframe Solution](www.nf-solution.com)_
 
