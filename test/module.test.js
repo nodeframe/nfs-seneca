@@ -157,6 +157,16 @@ describe("Module", function () {
     })
   })
 
+  context('#paseOption', () => {
+    it('should be able to parse option timeout to number', () => {
+      const options = {
+        timeout: "50000"
+      }
+
+      Module.parseOption(options).timeout.should.be.an('number');
+    })
+  })
+
   it('should be able to act to healthcheck', (done) => {
     const transportConfig = {
       listenings: [

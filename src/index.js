@@ -17,7 +17,7 @@ const deserializeError = (oe)=> {
 }
 
 export default function (senecaOptions, transportConfig = {}) {
-  const si = seneca(senecaOptions);
+  const si = seneca(Module.parseOption(senecaOptions));
 
   const act = (args) => {
     return new Promise((resolve, reject)=> {

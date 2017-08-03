@@ -38,3 +38,11 @@ function addHealthCheck(seneca, serviceName) {
     done(null, {ok: true, result: {timestamp: new Date(), service: serviceName}})
   })
 }
+
+
+export function parseOption(options = {}) {
+  if(options.timeout) {
+    options.timeout = parseInt(options.timeout, 10)
+  }
+  return options
+}

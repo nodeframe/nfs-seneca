@@ -48,7 +48,7 @@ describe('mesh plugin', function () {
         .should.have.property('object')
         .to.be.deep.equal({
           host: 'mesh-host',
-          pins: [{role: 'servicea', cmd: '*'}],
+          listen: [{role: 'servicea', cmd: '*'}],
           bases: ['mesh-bases:39999'],
           discover: {
             registry: {
@@ -57,7 +57,9 @@ describe('mesh plugin', function () {
             multicast: {
               active: false
             }
-          }
+          },
+          port: 39999
+
       })
     })
   })
