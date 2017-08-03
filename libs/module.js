@@ -5,6 +5,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.extractListenings = extractListenings;
 exports.registerHealthCheck = registerHealthCheck;
+exports.parseOption = parseOption;
 
 var _lodash = require('lodash');
 
@@ -55,5 +56,14 @@ function addHealthCheck(seneca, serviceName) {
   seneca.add(serviceObject, function (args, done) {
     done(null, { ok: true, result: { timestamp: new Date(), service: serviceName } });
   });
+}
+
+function parseOption() {
+  var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+  if (options.timeout) {
+    options.timeout = parseInt(options.timeout, 10);
+  }
+  return options;
 }
 //# sourceMappingURL=module.js.map

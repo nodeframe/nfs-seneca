@@ -7,7 +7,7 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = function (senecaOptions) {
   var transportConfig = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
-  var si = (0, _seneca2.default)(senecaOptions);
+  var si = (0, _seneca2.default)(Module.parseOption(senecaOptions));
 
   var act = function act(args) {
     return new _bluebird2.default(function (resolve, reject) {
