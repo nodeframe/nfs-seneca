@@ -1,9 +1,9 @@
 import * as Module from '../src/module'
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised'
-import {SenecaMockup} from "./helper.test";
+import {SenecaMockup, randomPort} from "./helper.test"
 chai.use(chaiAsPromised).should()
-import seneca from 'seneca';
+import seneca from 'seneca'
 
 describe("Module", function () {
   context('#extractListenings', () => {
@@ -176,7 +176,7 @@ describe("Module", function () {
             {role: 'role_1', cmd: '*'},
             {role: 'role_2', cmd: 'unrolled'}
           ],
-          port: '8000'
+          port: randomPort()
         }
       ],
       disableHealthCheck: false,
@@ -189,12 +189,19 @@ describe("Module", function () {
     let si2 = seneca()
     si2.client(transportConfig.listenings[0])
 
-    si2.act({role: 'role_1', cmd: '_healthCheck'}, function(err, resp) {
-      console.log('done', resp)
-      if (err) done(err);
-      resp.should.have.property('result').to.have.property('service').equal('role_1')
-      done()
+    si2.ready(function(){
+      si2.act({role: 'role_1', cmd: '_healthCheck'}, function(err, resp) {
+        console.log('done', resp)
+        if (err) done(err);
+        resp.should.have.property('result').to.have.property('service').equal('role_1')
+        done()
+      })
+
     })
 
+  })
+  
+  context('#healthCheckClientService', () => {
+    
   })
 })

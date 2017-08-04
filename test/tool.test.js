@@ -3,6 +3,7 @@ import chaiAsPromised from 'chai-as-promised'
 chai.use(chaiAsPromised).should()
 import seneca from 'seneca'
 import * as Tool from '../src/tool'
+import {randomPort} from "./helper.test";
 
 describe("Tool", function(){
   context('#getPing', () => {
@@ -16,7 +17,7 @@ describe("Tool", function(){
               {role: 'role_1', cmd: '*'},
               {role: 'role_2', cmd: 'unrolled'}
             ],
-            port: '8000',
+            port: randomPort(),
             host: 'localhost',
             timeout: 3000
           }

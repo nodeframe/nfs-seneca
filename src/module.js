@@ -8,7 +8,16 @@ export function extractListenings(transportConfig = {}) {
   return []
 }
 
+export function _extractArrayOfPin(arr) {
+  if (Array.isArray(arr)) {
+    const output = arr.map(m => m.pins)
+    return _.reject(_.flatten(output), _.isEmpty)
+  }
+  return []
+}
+
 export function registerHealthCheck(seneca, transportConfig = {}) {
+  console.log('=====##### Register HealthCheck ####=====')
   if(transportConfig.disableHealthCheck) {
     return
   }
@@ -29,6 +38,7 @@ export function registerHealthCheck(seneca, transportConfig = {}) {
       addHealthCheck(seneca, transportConfig.healthCheck)
     }
   }
+  console.log('=====##############################=====')
 }
 
 function addHealthCheck(seneca, serviceName) {
@@ -45,4 +55,8 @@ export function parseOption(options = {}) {
     options.timeout = parseInt(options.timeout, 10)
   }
   return options
+}
+
+export function healthCheckClientService() {
+
 }
