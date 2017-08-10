@@ -1,11 +1,7 @@
 import _ from 'lodash'
 
 export function extractListenings(transportConfig = {}) {
-	if (Array.isArray(transportConfig.listenings)) {
-    const pinSet = transportConfig.listenings.map(m => m.pins)
-    return _.reject(_.flatten(pinSet), _.isEmpty)
-  }
-  return []
+	return _extractArrayOfPin(transportConfig.listenings)
 }
 
 export function _extractArrayOfPin(arr) {
@@ -57,6 +53,10 @@ export function parseOption(options = {}) {
   return options
 }
 
+/**
+ * This method will gather all the client services that this service will consume
+ * The method will log out health check output on each role
+ */
 export function healthCheckClientService() {
-
+  
 }

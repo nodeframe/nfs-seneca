@@ -54,6 +54,27 @@ describe("Module", function () {
       ])
     })
   })
+  context('#_extractArrayOfPin', () => {
+    it('should be able to extract array of pins', () => {
+      Module._extractArrayOfPin([{
+        pins: [{a: 'a1', b: 'b1'}, {a: 'a2', b: 'b2'}]
+      }, {
+        pins: [{a:'a3', b: 'b4'}]
+      }]).should.be.deep.equal([{a: 'a1', b: 'b1'}, {a: 'a2', b: 'b2'}, {a:'a3', b: 'b4'}])
+    })
+
+    it('should be able to remove empty pins', () => {
+      Module._extractArrayOfPin([{
+        pins: [{a: 'a1', b: 'b1'}, {a: 'a2', b: 'b2'}]
+      }, {
+        pins: [{}]
+      }]).should.be.deep.equal([{a: 'a1', b: 'b1'}, {a: 'a2', b: 'b2'}])
+    })
+    
+    it('should return empty array if the parsed data is not iterable', () => {
+      Module._extractArrayOfPin(undefined).should.be.deep.equal([])
+    })
+  })
   context('#registerHealthCheck', () => {
     it('should be able to register health check according to pin', () => {
       const transportConfig = {
@@ -202,6 +223,37 @@ describe("Module", function () {
   })
   
   context('#healthCheckClientService', () => {
-    
+    it('should be able to healthcheck all', () => {
+      const transportConfig = {
+        listenings: [
+          {
+            type: 'http',
+            pins: [
+              {role: 'role_1', cmd: '*'},
+              {role: 'role_2', cmd: 'unrolled'}
+            ],
+            port: randomPort()
+          }
+        ],
+        disableHealthCheck: false,
+        healthCheck: 'role_3'
+      }
+      let si = seneca()
+      si.listen(transportConfig.listenings[0])
+      Module.registerHealthCheck(si, transportConfig)
+
+      let si2 = seneca()
+      si2.client(transportConfig.listenings[0])
+
+      si2.ready(function(){
+        si2.act({role: 'role_1', cmd: '_healthCheck'}, function(err, resp) {
+          console.log('done', resp)
+          if (err) done(err);
+          resp.should.have.property('result').to.have.property('service').equal('role_1')
+          done()
+        })
+
+      })
+    })
   })
 })
