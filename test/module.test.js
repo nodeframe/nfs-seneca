@@ -4,6 +4,7 @@ import chaiAsPromised from 'chai-as-promised'
 import {SenecaMockup, randomPort} from "./helper.test"
 chai.use(chaiAsPromised).should()
 import seneca from 'seneca'
+import sinon from 'sinon'
 
 describe("Module", function () {
   context('#extractListenings', () => {
@@ -94,7 +95,7 @@ describe("Module", function () {
         ]
       }
       let si = new SenecaMockup()
-      Module.registerHealthCheck(si, transportConfig)
+      Module.registerHealthCheck({si}, transportConfig)
         si.should.have.property('added')
         .of.length(2)
     })
@@ -113,7 +114,7 @@ describe("Module", function () {
         disableHealthCheck: true
       }
       let si = new SenecaMockup()
-      Module.registerHealthCheck(si, transportConfig)
+      Module.registerHealthCheck({si}, transportConfig)
       si.should.have.property('added')
         .of.length(0)
     })
@@ -132,7 +133,7 @@ describe("Module", function () {
         disableHealthCheck: false
       }
       let si = new SenecaMockup()
-      Module.registerHealthCheck(si, transportConfig)
+      Module.registerHealthCheck({si}, transportConfig)
       si.should.have.property('added')
         .of.length(1)
     })
@@ -152,7 +153,7 @@ describe("Module", function () {
         healthCheck: ['role_3', 'role_4']
       }
       let si = new SenecaMockup()
-      Module.registerHealthCheck(si, transportConfig)
+      Module.registerHealthCheck({si}, transportConfig)
       si.should.have.property('added')
         .of.length(3)
     })
@@ -172,7 +173,7 @@ describe("Module", function () {
         healthCheck: 'role_3'
       }
       let si = new SenecaMockup()
-      Module.registerHealthCheck(si, transportConfig)
+      Module.registerHealthCheck({si}, transportConfig)
       si.should.have.property('added')
         .of.length(2)
     })
@@ -205,7 +206,7 @@ describe("Module", function () {
     }
     let si = seneca()
     si.listen(transportConfig.listenings[0])
-    Module.registerHealthCheck(si, transportConfig)
+    Module.registerHealthCheck({si}, transportConfig)
 
     let si2 = seneca()
     si2.client(transportConfig.listenings[0])
@@ -235,25 +236,26 @@ describe("Module", function () {
             port: randomPort()
           }
         ],
+        clients: [
+          {
+            pins: [
+              {role: 'role_a', cmd: '*'},
+              {role: 'role_b', cmd: '*'}
+            ]
+          }
+        ],
         disableHealthCheck: false,
         healthCheck: 'role_3'
       }
       let si = seneca()
-      si.listen(transportConfig.listenings[0])
-      Module.registerHealthCheck(si, transportConfig)
+      let actStub = sinon.stub().resolves({ok: true, result: {timestamp: new Date(), service: 'by_sinon'}})
 
-      let si2 = seneca()
-      si2.client(transportConfig.listenings[0])
-
-      si2.ready(function(){
-        si2.act({role: 'role_1', cmd: '_healthCheck'}, function(err, resp) {
-          console.log('done', resp)
-          if (err) done(err);
-          resp.should.have.property('result').to.have.property('service').equal('role_1')
-          done()
+      return Module.healthCheckClientService({si, act: actStub}, transportConfig)
+        .then((results)=>{
+          actStub.withArgs({role: 'role_a', cmd: '_healthCheck'}).calledOnce.should.be.true
+          actStub.withArgs({role: 'role_b', cmd: '_healthCheck'}).calledOnce.should.be.true
         })
 
-      })
     })
   })
 })

@@ -68,7 +68,7 @@ export default function (senecaOptions, transportConfig = {}) {
       break
   }
 
-  Module.registerHealthCheck(si, transportConfig)
+  Module.registerHealthCheck({si, act, add}, transportConfig)
 
   return {act, add, si};
 };

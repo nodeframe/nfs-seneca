@@ -1,4 +1,7 @@
 import _ from 'lodash'
+import Promise from 'bluebird'
+
+const HEALTH_CHECK_CMD = '_healthCheck'
 
 export function extractListenings(transportConfig = {}) {
 	return _extractArrayOfPin(transportConfig.listenings)
@@ -21,26 +24,26 @@ export function registerHealthCheck(seneca, transportConfig = {}) {
   pins.forEach((p) => {
     // this will add healthCheck on only * pins
     if (p.cmd === '*') {
-      addHealthCheck(seneca, p.role)
+      addHealthCheck(seneca, p.role, transportConfig)
     }
   })
   if(transportConfig.healthCheck) {
     if (Array.isArray(transportConfig.healthCheck)) {
       _.uniq(transportConfig.healthCheck).forEach((role) => {
-        addHealthCheck(seneca, role)
+        addHealthCheck(seneca, role, transportConfig)
       })
     }
     if (typeof transportConfig.healthCheck === 'string') {
-      addHealthCheck(seneca, transportConfig.healthCheck)
+      addHealthCheck(seneca, transportConfig.healthCheck, transportConfig)
     }
   }
   console.log('=====##############################=====')
 }
 
-function addHealthCheck(seneca, serviceName) {
-  const serviceObject = {role: serviceName, cmd: '_healthCheck'}
+function addHealthCheck(seneca, serviceName, transportConfig = {}) {
+  const serviceObject = {role: serviceName, cmd: HEALTH_CHECK_CMD}
   console.log('assign health check', serviceObject)
-  seneca.add(serviceObject, function(args, done) {
+  seneca.si.add(serviceObject, function(args, done) {
     done(null, {ok: true, result: {timestamp: new Date(), service: serviceName}})
   })
 }
@@ -57,6 +60,10 @@ export function parseOption(options = {}) {
  * This method will gather all the client services that this service will consume
  * The method will log out health check output on each role
  */
-export function healthCheckClientService() {
+export function healthCheckClientService(seneca, transportConfig = {}) {
+  let clients = _extractArrayOfPin(transportConfig.clients)
+  return Promise.map(clients, function(pin) {
+    return seneca.act({role: pin.role, cmd: HEALTH_CHECK_CMD})
+  })
   
 }
