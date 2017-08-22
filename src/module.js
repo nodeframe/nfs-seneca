@@ -44,7 +44,18 @@ function addHealthCheck(seneca, serviceName, transportConfig = {}) {
   const serviceObject = {role: serviceName, cmd: HEALTH_CHECK_CMD}
   console.log('assign health check', serviceObject)
   seneca.si.add(serviceObject, function(args, done) {
-    done(null, {ok: true, result: {timestamp: new Date(), service: serviceName}})
+    if (args.recursive == false) {
+      done(null, {ok: true, result: {timestamp: new Date(), service: serviceName}})
+    } else {
+      healthCheckClientService(seneca, transportConfig)
+        .then((results)=>{
+          done(null, {ok: true, result: {timestamp: new Date(), service: serviceName, serviceClients: results}})
+        }).catch((e) => {
+          console.log('e = ', e)
+          done(null, {ok: false, result: {timestamp: new Date(), service: serviceName}, error: e})
+      })
+    }
+
   })
 }
 
@@ -63,7 +74,7 @@ export function parseOption(options = {}) {
 export function healthCheckClientService(seneca, transportConfig = {}) {
   let clients = _extractArrayOfPin(transportConfig.clients)
   return Promise.map(clients, function(pin) {
-    return seneca.act({role: pin.role, cmd: HEALTH_CHECK_CMD})
+    return seneca.act({role: pin.role, cmd: HEALTH_CHECK_CMD, recursive: false})
   })
   
 }
