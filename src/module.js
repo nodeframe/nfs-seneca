@@ -51,8 +51,7 @@ function addHealthCheck(seneca, serviceName, transportConfig = {}) {
         .then((results)=>{
           done(null, {ok: true, result: {timestamp: new Date(), service: serviceName, serviceClients: results}})
         }).catch((e) => {
-          console.log('e = ', e)
-          done(null, {ok: false, result: {timestamp: new Date(), service: serviceName}, error: e})
+          done(e)
       })
     }
 

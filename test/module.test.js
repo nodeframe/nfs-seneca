@@ -261,54 +261,104 @@ describe("Module", function () {
 
     })
 
-    it('on a recursive system', (done) => {
-      const port1 = randomPort()
-      const port2 = randomPort()
-      const transportConfig = {
-        listenings: [
-          {
-            type: 'http',
-            pins: [
-              {role: 'role_1', cmd: '*'},
-              {role: 'role_2', cmd: 'unrolled'}
-            ],
-            port: port1
-          }
-        ],
-        clients: [
-          {
-            pins:[
-              {role: 'role_a', cmd: '*'},
-              {role: 'role_b', cmd: '*'}
-            ],
-            port: port2
-          }
-        ],
-        disableHealthCheck: false,
-        healthCheck: 'role_3'
-      }
-      let si = seneca()
-      si.listen(transportConfig.listenings[0])
-      si.client(transportConfig.clients[0])
-      Module.registerHealthCheck({si, act: Wrapper.actGenerator(si)}, transportConfig)
+    context('on recursive system', () => {
+      it('success case', (done) => {
+        const port1 = randomPort()
+        const port2 = randomPort()
+        const transportConfig = {
+          listenings: [
+            {
+              type: 'http',
+              pins: [
+                {role: 'role_1', cmd: '*'},
+                {role: 'role_2', cmd: 'unrolled'}
+              ],
+              port: port1
+            }
+          ],
+          clients: [
+            {
+              pins:[
+                {role: 'role_a', cmd: '*'},
+                {role: 'role_b', cmd: '*'}
+              ],
+              port: port2
+            }
+          ],
+          disableHealthCheck: false,
+          healthCheck: 'role_3'
+        }
+        let si = seneca()
+        si.listen(transportConfig.listenings[0])
+        si.client(transportConfig.clients[0])
+        Module.registerHealthCheck({si, act: Wrapper.actGenerator(si)}, transportConfig)
 
-      let si2 = seneca()
-      si2.listen(transportConfig.clients[0])
-      Module.registerHealthCheck({si: si2, act: Wrapper.actGenerator(si2)}, {listenings: transportConfig.clients})
+        let si2 = seneca()
+        si2.listen(transportConfig.clients[0])
+        Module.registerHealthCheck({si: si2, act: Wrapper.actGenerator(si2)}, {listenings: transportConfig.clients})
 
-      let si3 = seneca()
-      si3.client(transportConfig.listenings[0])
+        let si3 = seneca()
+        si3.client(transportConfig.listenings[0])
 
-      si3.ready(function(){
-        si3.act({role: 'role_1', cmd: '_healthCheck'}, function(err, resp) {
-          console.log('done', resp)
-          if (err) done(err);
-          resp.should.have.property('result').to.have.property('serviceClients')
-          done()
+        si3.ready(function(){
+          si3.act({role: 'role_1', cmd: '_healthCheck'}, function(err, resp) {
+            console.log('done', resp)
+            if (err) done(err);
+            resp.should.have.property('result').to.have.property('serviceClients')
+            done()
+          })
+
         })
 
       })
+      it('error case', (done) => {
+        const port1 = randomPort()
+        const port2 = randomPort()
+        const transportConfig = {
+          listenings: [
+            {
+              type: 'http',
+              pins: [
+                {role: 'role_1', cmd: '*'},
+                {role: 'role_2', cmd: 'unrolled'}
+              ],
+              port: port1
+            }
+          ],
+          clients: [
+            {
+              pins:[
+                {role: 'role_a', cmd: '*'},
+                {role: 'role_b', cmd: '*'}
+              ],
+              port: port2
+            }
+          ],
+          disableHealthCheck: false,
+          healthCheck: 'role_3'
+        }
+        let si = seneca()
+        si.listen(transportConfig.listenings[0])
+        si.client(transportConfig.clients[0])
+        Module.registerHealthCheck({si, act: Wrapper.actGenerator(si)}, transportConfig)
 
+        let si2 = seneca()
+        si2.listen(transportConfig.clients[0])
+        // No matching pattern for this _healthCheck
+
+
+        let si3 = seneca()
+        si3.client(transportConfig.listenings[0])
+
+        si3.ready(function(){
+          si3.act({role: 'role_1', cmd: '_healthCheck'}, function(err, resp) {
+            err.should.not.be.null
+            done(resp)
+          })
+
+        })
+
+      })
     })
   })
 })
