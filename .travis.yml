@@ -5,12 +5,13 @@ node_js:
 cache:
   yarn: true
 script:
-  - npm run test
-  - npm run build
-#deploy:
-#  provider: npm
-#  email: support@nf-solution.com
-#  api_key:
-#    secure: clAATCqubhZIxPEscPLe4r5z5Vw+59jmpxW0Gc9/d+IsfO9gPtdNc4/Reg7KE2vV3zX+YReDvLqAdwbbL61vcHIC8v781iG9S2EuEzDiHFpYIYtTGK3B6HTIquOYZdSxYllF/T4SQWEADrUymSf4YQyBzOuIAVp8G8PCuqqqOqLRuKoXCPvo28Rc9V7VSnwvwmZAeNORuPYmneVPMWsin1Rl9TDg1DNfCL2dEo5+tR+v5Rb1xSeC+55f5ew2ak3MDaQcWqM+Q3jDCeoZWyPIuDXxBYGrZ97Xz63uCiNpbDiJ9N8WUwxAJubnSdKP6Lfq0UEZEJCzCVqevaXQ6qxPfEpe4D7/CNGKQYbLOH6luvl5VdzSGJmBw5AVcBj6JSDVYM+Wasrf6UECb69oxJfiTStQtr1/TmhBQmuvWHyLz3ck+K4mxN3Tw3AHT9eGu9r+1GYrYq4tkJbksaZqjDUIHsX91du/lHUFyATaEuZQW8wLouFoz4vAR5zGlpmmC89JqaktMetLCJnlNMuAnBk1SqolnVRNLKl/kA9U3Bq2Tk1XrQ3gCjM+gIqfYinqnnF7leG2JWubZXnpqbTMGuW+iqUclFfugTXNgiHmXOviYRcmuPgw+53bYeK8zxgwKjEIb51VTeMQZ839T4qZOQNVMbCZIMjqvP1VS6F/u3h16+c=
-#  on:
-#    tags: true
+- npm run test
+- npm run build
+deploy:
+  provider: npm
+  email: junrai82@gmail.com
+  api_key:
+    secure: gqGYr9DzYi4oZhHWjpLjDTQMakWzKib7XvmkHFdgZ0MjnFMF/WwtSwc0Js72AhmC6dtpA1roM/ltLT1LPR7w5HDbiqkhjJuDHKxxx+NPL+1RzXUXYLnryR4tsqKFDeQILC5iw51dzncVbHqoxDssbUC6r6EEqqjG0rD2ic0T7+JuKMrNL2kbuFnNPbIaByMLOu4vPQtUp2xBjyYS1k8pKKbys63umge/x/DqygMzIuIWqyV2wXGmJ9YnssKnlO9FU+31rsA9oQx1anRSa7RHBEhqpBLVWAg+1y6UiaCmyLgM2E5oMJivx5+hlTsJhp2CfqCjNONz6rbtLSY55IYnxOmlMs/8gEWv2C6fhDIGw4oEyLebKy2XR66arShisqcE8CzST+sZDWeXcKQq+8Y27QbszxdRhSo3z0g4UdhTeTtfxXQgABjx8T5Ilw5kgo8MPXv6o5rSmV8dpvPWTRRpUnpEOyRuxbkLo+eqaxoIy+sSJsEeGAfxK3n2IRpYOxQHqbvVUPcNl4uYKvL4Ucd9GFCLmmSS+IUfef9I1kN1ys9Dj+xH2q9eznChvET42PDrc8lN5nLr84GvjDA9s+EJM2Phpc9caogMxMmY32Xb7UFKtbwoHzX8AxXWsUFsHUXltXhbN5Ws5tkev7AgAWANQHVrpgve/VLt64wPbKAeVT4=
+  on:
+    tags: true
+    repo: nodeframe/nfs-seneca
