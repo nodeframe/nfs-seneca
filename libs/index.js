@@ -9,41 +9,9 @@ exports.default = function (senecaOptions) {
 
   var si = (0, _seneca2.default)(Module.parseOption(senecaOptions));
 
-  var act = function act(args) {
-    return new _bluebird2.default(function (resolve, reject) {
-      si.act(args, function (err, resp) {
-        if (err) {
-          reject(err);
-          return;
-        } else if (!resp.ok) reject(deserializeError(resp.error));else resolve(resp.result);
-      });
-    });
-  };
+  var act = Wrapper.actGenerator(si);
 
-  var add = function add(options, callback) {
-    si.add(options, function (args, done) {
-      try {
-        if (callback.length >= 2) {
-          callback.bind(si)(args, done);
-        } else {
-          var resultWithArgs = callback.bind(si)(args);
-          var isThenable = 'function' === typeof resultWithArgs.then;
-          if (isThenable) {
-            resultWithArgs.then(function (response) {
-              done(null, { ok: true, result: response });
-            }).catch(function (e) {
-              done(null, { ok: false, error: serializeError(e) });
-            });
-          } else {
-            done(null, { ok: true, result: resultWithArgs });
-          }
-        }
-      } catch (e) {
-        done(null, { ok: false, error: serializeError(e) });
-        return;
-      }
-    });
-  };
+  var add = Wrapper.addGenerator(si);
 
   switch (transportConfig.type) {
     case 'mesh':
@@ -56,7 +24,7 @@ exports.default = function (senecaOptions) {
       break;
   }
 
-  Module.registerHealthCheck(si, transportConfig);
+  Module.registerHealthCheck({ si: si, act: act, add: add }, transportConfig);
 
   return { act: act, add: add, si: si };
 };
@@ -64,10 +32,6 @@ exports.default = function (senecaOptions) {
 var _seneca = require('seneca');
 
 var _seneca2 = _interopRequireDefault(_seneca);
-
-var _bluebird = require('bluebird');
-
-var _bluebird2 = _interopRequireDefault(_bluebird);
 
 var _register = require('./register');
 
@@ -79,21 +43,13 @@ var _module = require('./module');
 
 var Module = _interopRequireWildcard(_module);
 
+var _senecaWrapper = require('./seneca-wrapper');
+
+var Wrapper = _interopRequireWildcard(_senecaWrapper);
+
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var serializeError = function serializeError(e) {
-  return { name: e.name, stack: e.stack, message: e.message, errors: e.errors };
-};
-
-var deserializeError = function deserializeError(oe) {
-  var e = new Error(oe.message);
-  e.name = oe.name;
-  e.errors = oe.errors;
-  e.stack = oe.stack;
-  return e;
-};
 
 ;
 //# sourceMappingURL=index.js.map
