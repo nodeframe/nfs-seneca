@@ -10,6 +10,6 @@ deploy:
   api_key:
     secure: Nnl93EM47RCdvT4mq4sCx7Ug+cpbfvELjJsTc5YHQdfo+yeJUmc7MN20GRO4kCYAAWGwvDKpfxttDPhaveqlneR+0m16rEWvinJWXrHiYSE+XHsjVlBdc6pj86aT4v49JhTnEEA8BojKYMH08kasOPEbU0zhxlhd3+/3+SNW0JaaK60sM4azOJ0SFv+M8TlbWzP+IZyPgH68qMpS3cRdrPb7dylpuE5yDgTsbJOH4EPKQwT8mCyMFUklLWQxwgY0YdS97/yOvQYkLX7sw3YPfxObBfZdxZN+cLYkRig/IEjxsKqXnmw/r9k9Y3eFThQN/ECycQgTlZlMcGXOxpAhvMDds/teeWW5cRRKBE9LwvGoR4tIh6u1X7qxORHqyZ/Rql3TtRO2k/Iku3Eio88KC+FuW7+8FeyclfZQ5PI6UAVWW/JSHjDXkPwACR+DrhSBT+SRKp6ENhJGsTP+wEZcufLkhlo57m1Fg9/aF0NsTS0NYhTX1v+Ry5PzktoKadKJGvOFWPgpYsDCKbXqR59x36+mNaPUUeX3rqjZOxqSVhSTy9e+XUnKEF6eLkZ697QLHaecLaDmiF701/U3mj+HnuuYwM+e8lN39clrqNNPtCtnNRM3O4dNefEz8UmMxeidAy0uMCtVwwOauObo40jJon7wU3xdnQziAe2EgYK6nB0=
   on:
-    tags: true
+#    tags: true
     repo: nodeframe/nfs-seneca
   skip_cleanup: true
