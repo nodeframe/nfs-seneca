@@ -41,5 +41,8 @@
     "lodash": "4.17.4",
     "seneca": "3.2.2",
     "source-map-support": "^0.4.15"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
