@@ -1,12 +1,13 @@
 {
   "name": "@nodeframe/seneca",
-  "version": "2.2.9",
+  "version": "2.2.10",
   "description": "seneca wrapper",
   "main": "libs/index.js",
   "scripts": {
     "build": "rm -rf libs/** && node_modules/.bin/babel src/ -d libs -s",
     "start": "node_modules/.bin/nodemon src/index.js --watch src --exec 'node_modules/.bin/eslint src && node_modules/.bin/babel-node'",
-    "test": "node_modules/.bin/mocha --require source-map-support/register --compilers js:babel-core/register --recursive"
+    "test": "node_modules/.bin/mocha --require source-map-support/register --compilers js:babel-core/register --recursive",
+    "prepublish": "npm run build"
   },
   "repository" : {
     "type" : "git",
