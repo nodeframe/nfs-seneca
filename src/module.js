@@ -73,9 +73,14 @@ export function parseOption(options = {}) {
  */
 export function healthCheckClientService(seneca, transportConfig = {}) {
   let clients = _extractArrayOfPin(transportConfig.clients)
-  console.log('run healthcheck resursively to', clients)
+  console.log('========== run healthcheck resursively to: ', clients.map((c) => c.role).join(','), ' ==========')
   return Promise.map(clients, function(pin) {
     return seneca.act({role: pin.role, cmd: HEALTH_CHECK_CMD, recursive: false})
+      .then((results)=>{
+        console.log(pin.role, 'is available')
+        return results
+      })
   })
   
 }
+

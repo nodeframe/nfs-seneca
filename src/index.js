@@ -3,6 +3,7 @@ import {register} from './register';
 import * as Mesh from './plugin/mesh';
 import * as Module from "./module";
 import * as Wrapper from './seneca-wrapper';
+import {healthCheckClientService} from "./module";
 
 export default function (senecaOptions, transportConfig = {}) {
   const si = seneca(Module.parseOption(senecaOptions));
@@ -22,7 +23,17 @@ export default function (senecaOptions, transportConfig = {}) {
       break
   }
 
+  // Register health check to the seneca
   Module.registerHealthCheck({si, act, add}, transportConfig)
+
+  //run initial health check on seneca start
+  si.ready(function(arg){
+    console.log(`service ID [${this.id}] has been ready  ...`)
+    if( process.env.NO_CLIENT_HEALTHCHECK_TEST!=="true" ) {
+      healthCheckClientService(si, transportConfig)
+    }
+  })
+
 
   return {act, add, si};
 };
