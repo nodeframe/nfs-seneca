@@ -77,9 +77,22 @@ export function healthCheckClientService(seneca, transportConfig = {}) {
   return Promise.map(clients, function(pin) {
     return seneca.act({role: pin.role, cmd: HEALTH_CHECK_CMD, recursive: false})
       .then((result)=>{
-        console.log(pin.role, 'is available')
-        return result
+        console.log(result.service, 'is available at', result.timestamp)
+        return {success: true, result}
+      }).catch((e) => {
+        console.log('Error on service', pin.role, 'of detai: ', e.message)
+        return {success: false, e}
       })
+  }).then((results)=>{
+    if (_.every(results, 'success')) {
+      // all success
+      return results
+    } else {
+      // not all success
+      const e = new Error("Not all service is available")
+      e.detail = results
+      throw e
+    }
   })
   
 }

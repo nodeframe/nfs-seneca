@@ -1,6 +1,6 @@
 {
   "name": "@nodeframe/seneca",
-  "version": "2.2.13",
+  "version": "2.2.14",
   "description": "seneca wrapper",
   "main": "libs/index.js",
   "scripts": {
