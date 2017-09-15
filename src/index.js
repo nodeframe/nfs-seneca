@@ -30,7 +30,15 @@ export default function (senecaOptions, transportConfig = {}) {
   si.ready(function(arg){
     console.log(`service ID [${this.id}] has been ready  ...`)
     if( process.env.NO_CLIENT_HEALTHCHECK_TEST!=="true" ) {
-      healthCheckClientService(si, transportConfig)
+      console.log('============= START INITIAL HEALTHCHECK =================')
+      healthCheckClientService({act}, transportConfig)
+        .catch((e) => {
+          console.error(e)
+          console.log('!!!!! NOT ALL SERVICE IS ALIVE !!!!!!!')
+        }).finally(() => {
+          console.log('============= END INITIAL HEALTHCHECK =================')
+      })
+
     }
   })
 
