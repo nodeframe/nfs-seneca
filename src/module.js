@@ -44,7 +44,9 @@ function addHealthCheck(seneca, serviceName, transportConfig = {}) {
   const serviceObject = {role: serviceName, cmd: HEALTH_CHECK_CMD}
   console.log('assign health check', serviceObject)
   seneca.si.add(serviceObject, function(args, done) {
-    console.log(`run healthcheck on role: ${serviceName} with recursive ${args.recursive}`)
+    if (transportConfig.logHealthCheckPulse === "true") {
+      console.log(`run healthcheck on role: ${serviceName} with recursive ${args.recursive}`)
+    }
     if (args.recursive == false) {
       done(null, {ok: true, result: {timestamp: new Date(), service: serviceName}})
     } else {
@@ -77,7 +79,9 @@ export function healthCheckClientService(seneca, transportConfig = {}) {
   return Promise.map(clients, function(pin) {
     return seneca.act({role: pin.role, cmd: HEALTH_CHECK_CMD, recursive: false})
       .then((result)=>{
-        console.log(result.service, 'is available at', result.timestamp)
+        if (transportConfig.logHealthCheckPulse === "true") {
+          console.log(result.service, 'is available at', result.timestamp)
+        }
         return {success: true, result}
       }).catch((e) => {
         console.log('Error on service', pin.role, 'of detai: ', e.message)
@@ -94,6 +98,6 @@ export function healthCheckClientService(seneca, transportConfig = {}) {
       throw e
     }
   })
-  
+
 }
 

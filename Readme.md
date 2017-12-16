@@ -1,4 +1,4 @@
-Seneca wrapper for Modern ES and promise application
+Seneca wrapper for ES6 and promise application
 
 Create and maintain by _[Nodeframe Solution](www.nf-solution.com)_
 
@@ -278,6 +278,34 @@ Lastly, if you are not interested in the health check, you can disable it by pas
 const seneca = nfsSeneca({}, {
   disableHealthCheck: true
 })
+```
+
+#### HealthCheck Log Pulse
+if you want to see the log pulse of `_healthCheck`, you should pass
+
+
+```javascript
+const seneca = nfsSeneca({}, {
+  logHealthCheckPulse: "true"
+})
+```
+
+with this, your application will log something like this every health check pulse
+
+```sh
+run healthcheck resursively to:  payment,MAIL,property,USER,TASK,portals
+
+USER is available at 2017-12-11T21:37:06.691Z
+
+TASK is available at 2017-12-11T21:37:06.691Z
+
+MAIL is available at 2017-12-11T21:37:06.691Z
+
+payment is available at 2017-12-11T21:37:06.692Z
+
+property is available at 2017-12-11T21:37:06.692Z
+
+portals is available at 2017-12-11T21:37:06.695Z
 ```
 
 ### Ping function
