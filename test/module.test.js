@@ -72,7 +72,7 @@ describe("Module", function () {
         pins: [{}]
       }]).should.be.deep.equal([{a: 'a1', b: 'b1'}, {a: 'a2', b: 'b2'}])
     })
-    
+
     it('should return empty array if the parsed data is not iterable', () => {
       Module._extractArrayOfPin(undefined).should.be.deep.equal([])
     })
@@ -138,7 +138,7 @@ describe("Module", function () {
       si.should.have.property('added')
         .of.length(1)
     })
-    
+
     it('should add more additional health check on manual specify role', () => {
       const transportConfig = {
         listenings: [
@@ -189,7 +189,7 @@ describe("Module", function () {
       Module.parseOption(options).timeout.should.be.an('number');
     })
   })
-  
+
   context('#healthCheckClientService', () => {
     it('should be able to healthcheck all', () => {
       const transportConfig = {
@@ -360,5 +360,27 @@ describe("Module", function () {
 
       })
     })
+  })
+
+  context('#logHealthCheck', () => {
+    let logSpy
+    before(() => {
+      logSpy = sinon.spy(console, "log")
+    })
+    afterEach(() => logSpy.reset())
+    it("should log out if the logHealthCheckPulse is true", () => {
+      Module.logHealthCheck({logHealthCheckPulse: "true"}, "hello")
+      logSpy.calledOnce.should.be.true
+    })
+    it("should not log out if the logHealthCheckPulse is not true", () => {
+      Module.logHealthCheck({logHealthCheckPulse: "false"}, "hello")
+      logSpy.notCalled.should.be.true
+    })
+
+    it("should be able to pass arguments to console.log", () => {
+      Module.logHealthCheck({logHealthCheckPulse: "true"}, "hello", "this", "is", "a", "book")
+      logSpy.calledWith("hello", "this", "is", "a", "book").should.be.true
+    })
+
   })
 })
