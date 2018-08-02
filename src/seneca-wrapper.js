@@ -1,14 +1,20 @@
 import Promise from 'bluebird';
+import _serializeError from "serialize-error"
+import _ from "lodash"
 
-const serializeError = (e)=> {
-  return {name: e.name, stack: e.stack, message: e.message, errors: e.errors};
+export const serializeError = (e)=> {
+  try {
+    return _serializeError(e)
+  } catch (someError) {
+    return {name: e.name, stack: e.stack, message: e.message, errors: e.errors}
+  }
 }
 
-const deserializeError = (oe)=> {
+export const deserializeError = (oe)=> {
   const e = new Error(oe.message);
-  e.name = oe.name;
-  e.errors = oe.errors;
-  e.stack = oe.stack;
+  _.keys(_.omit(oe, ["message"])).forEach((key) => {
+    e[key] = oe[key]
+  })
   return e;
 }
 

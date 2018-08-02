@@ -9,9 +9,9 @@
     "test": "node_modules/.bin/mocha --require source-map-support/register --compilers js:babel-core/register --recursive",
     "prepublish": "npm run build"
   },
-  "repository" : {
-    "type" : "git",
-    "url" : "https://github.com/nodeframe/nfs-seneca.git"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nodeframe/nfs-seneca.git"
   },
   "author": "Nodeframe Solution",
   "license": "ISC",
@@ -41,6 +41,7 @@
     "bluebird": "3.4.6",
     "lodash": "4.17.4",
     "seneca": "3.2.2",
+    "serialize-error": "^2.1.0",
     "source-map-support": "^0.4.15"
   },
   "publishConfig": {
