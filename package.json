@@ -40,7 +40,7 @@
     "babel-core": "6.18.2",
     "bluebird": "3.4.6",
     "lodash": "4.17.15",
-    "seneca": "3.2.2",
+    "seneca": "3.4.3",
     "serialize-error": "^2.1.0",
     "source-map-support": "^0.4.15"
   },
